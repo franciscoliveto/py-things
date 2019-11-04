@@ -111,6 +111,6 @@ while True:
     n = (n % 65536) + 3
     if n < 16:
         n = 16
-    time.sleep(2)
+    time.sleep(30)
 
 
