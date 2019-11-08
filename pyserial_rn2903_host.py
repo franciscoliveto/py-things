@@ -2,14 +2,16 @@ from serial import Serial
 
 import time
 
+
 def to_bytes(seq):
     """Converts seq to a bytes type"""
     if isinstance(seq, int):
         return bytes(str(seq), 'utf8')
     elif isinstance(seq, str):
         return bytes(seq, 'utf8')
-    else: 
+    else:
         pass
+
 
 def mac_pause(handler: Serial) -> int:
     command = b'mac pause\r\n'
@@ -17,6 +19,7 @@ def mac_pause(handler: Serial) -> int:
     response = handler.readline()
     # TODO: serial port timeout
     return int(response)
+
 
 def radio_set(handler, parameter, value):
     byte_value = to_bytes(value)
@@ -30,10 +33,12 @@ def radio_set(handler, parameter, value):
         return False
     else:
         return False
-    print(response) # Just for debugging purpouses.
+    print(response)  # Just for debugging purpouses.
+
 
 def radio_get(parameter):
     pass
+
 
 def radio_receive_packet(handler: Serial, window_size: int = 0) -> str:
     """Receives a data packet from the radio module.
@@ -46,10 +51,10 @@ def radio_receive_packet(handler: Serial, window_size: int = 0) -> str:
     ws = to_bytes(window_size)
     command = b'radio rx ' + ws + b'\r\n'
     handler.write(command)
-    response = handler.readline() # Wait for the first response.
+    response = handler.readline()  # Wait for the first response.
     if b'busy' in response:
         handler.write(b'sys reset\r\n')
-        handler.readline() # dummy read()
+        handler.readline()  # dummy read()
         return ''
         # TODO: raise an exception.
     elif b'invalid_param' in response:
@@ -63,9 +68,10 @@ def radio_receive_packet(handler: Serial, window_size: int = 0) -> str:
             elif b'radio_err' in response:
                 # TODO: raise an exception.
                 pass
-            time.sleep(1) # TODO: seconds or milliseconds yield?
+            time.sleep(1)  # TODO: seconds or milliseconds yield?
     else:
         pass
+
 
 def radio_transmit_packet(handler: Serial, data: str) -> bool:
     """Transmits a data packet through the radio module.
@@ -75,21 +81,20 @@ def radio_transmit_packet(handler: Serial, data: str) -> bool:
     """
     command = b'radio tx ' + data.encode() + b'\r\n'
     handler.write(command)
-    response = handler.readline() # Wait for the first response.
+    response = handler.readline()  # Wait for the first response.
     if response == b'invalid_param\r\n' or response == b'busy\r\n':
         return False
     elif response == b'ok\r\n':
-        response = handler.readline() # Wait for the second response.
+        response = handler.readline()  # Wait for the second response.
         if response == b'radio_tx_ok\r\n':
             return True
         elif response == b'radio_err\r\n':
             return False
-        else: # Unknown response or empty
+        else:  # Unknown response or empty
             return False
-    else: # Unknown response or empty
+    else:  # Unknown response or empty
         return False
 
-        
 
 handler = Serial('/dev/ttyACM0', baudrate=57600, timeout=5)
 
@@ -104,6 +109,7 @@ radio_set(handler, 'sync', '12')
 radio_set(handler, 'bw', 125)
 mac_pause(handler)
 
+"""
 n = 16
 while True:
     hex_ascii = hex(n)[2:]
@@ -113,4 +119,9 @@ while True:
         n = 16
     time.sleep(30)
 
+"""
 
+frame = '12041BA30B0021AE550100011234011234013234'
+while True:
+    radio_transmit_packet(handler, frame)
+    time.sleep(30)

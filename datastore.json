@@ -1,0 +1,27 @@
+{
+  "endpoints": [
+    { "eui": "041BA30B0021AE55", "register": 4, "address": 0, "quantity": 5 },
+    { "eui": "041BA30B0021AE54", "register": 4, "address": 0, "quantity": 5 },
+    { "eui": "041BA30B0021AE53", "register": 4, "address": 0, "quantity": 5 },
+    { "eui": "041BA30B0021AE51", "register": 4, "address": 0, "quantity": 5 }
+  ],
+  "modbus": {
+    "port": 502,
+    "address-length": 5,
+    "memory": [
+      { "type": "coils", "block": { "address": 1, "quantity": 0 } },
+      {
+        "type": "discrete-inputs",
+        "block": { "address": 10001, "quantity": 0 }
+      },
+      {
+        "type": "input-registers",
+        "block": { "address": 30001, "quantity": 0 }
+      },
+      {
+        "type": "holding-registers",
+        "block": { "address": 40001, "quantity": 0 }
+      }
+    ]
+  }
+}
