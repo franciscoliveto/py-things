@@ -6,11 +6,11 @@ import sys
 
 class Watcher(object):
     running = True
-    refresh_delay_secs = 1
 
-    def __init__(self, watch_file, call_func_on_change=None, *args, **kwargs):
+    def __init__(self, watch_file, refresh_delay=1, call_func_on_change=None, *args, **kwargs):
         self._cached_stamp = 0
         self.filename = watch_file
+        self.refresh_delay = refresh_delay
         self.call_func_on_change = call_func_on_change
         self.args = args
         self.kwargs = kwargs
@@ -20,14 +20,13 @@ class Watcher(object):
         if statinfo.st_mtime != self._cached_stamp:
             self._cached_stamp = statinfo.st_mtime
             # File has changed, so do something...
-            print('File changed')
             if self.call_func_on_change is not None:
                 self.call_func_on_change(*self.args, **self.kwargs)
 
     def watch(self):
         while self.running:
             self.look()  # Look for changes
-            time.sleep(self.refresh_delay_secs)
+            time.sleep(self.refresh_delay)
 
 
 class MyThread(threading.Thread):
@@ -73,12 +72,16 @@ class MainThread(threading.Thread):
                 t.stop()
                 t.join()
 
+            self.threads.clear()
+            self.signal.clear()
+
     def reset(self):
         self.signal.set()
 
 
-def restart_main_thread(t: MainThread):
-    if not t.is_alive:
+def event_on_file_change(*args, **kwargs):
+    t = kwargs['thread']
+    if not t.is_alive():
         t.start()
     else:
         t.reset()
@@ -89,7 +92,8 @@ if __name__ == "__main__":
 
     t = MainThread()
 
-    watcher = Watcher(watch_file, restart_main_thread, t)
+    watcher = Watcher(
+        watch_file, call_func_on_change=event_on_file_change, thread=t)
 
     while True:
         try:
