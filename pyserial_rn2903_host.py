@@ -121,7 +121,9 @@ while True:
 
 """
 
-frame = '12041BA30B0021AE550100011234011234013234'
+frame = '120004A30B002852FD010001070D023F0203000004000005FF00060000'
+
 while True:
     radio_transmit_packet(handler, frame)
+    #data = radio_receive_packet(handler)
     time.sleep(30)

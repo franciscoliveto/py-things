@@ -87,6 +87,38 @@ def event_on_file_change(*args, **kwargs):
         t.reset()
 
 
+""" class T(threading.Thread):
+    def __init__(self, n):
+        super().__init__()
+        self.n = n
+        print('constructor', n)
+
+    def __del__(self):
+        print('destructor', self.n)
+
+
+t = T(1)
+t = T(2) """
+
+
+""" class T(threading.Thread):
+    def start(self, a, b):
+        self.a = a
+        self.b = b
+        print(self.a, self.b)
+        super().start()
+
+    def run(self):
+        print('running')
+        while True:
+            print(self.a, self.b)
+            time.sleep(2)
+
+
+t = T()
+t.start(2, 3)
+t.join() """
+
 if __name__ == "__main__":
     watch_file = 'myfile'
 
