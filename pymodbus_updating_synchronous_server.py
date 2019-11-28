@@ -19,6 +19,8 @@ log.setLevel(logging.DEBUG)
 # --------------------------------------------------------------------------- #
 # define your callback process
 # --------------------------------------------------------------------------- #
+
+
 def thread_update_context(c):
     """ A worker process that runs every so often and
     updates live values of the context. It should be noted
@@ -39,20 +41,20 @@ def thread_update_context(c):
 
 
 def run_updating_server():
-    # ----------------------------------------------------------------------- # 
+    # ----------------------------------------------------------------------- #
     # initialize your data store
-    # ----------------------------------------------------------------------- # 
-    
+    # ----------------------------------------------------------------------- #
+
     store = ModbusSlaveContext(
         di=ModbusSequentialDataBlock(100, [17]*30),
         co=ModbusSequentialDataBlock(100, [17]*30),
         hr=ModbusSequentialDataBlock(100, [17]*30),
         ir=ModbusSequentialDataBlock(100, [17]*30))
     context = ModbusServerContext(slaves=store, single=True)
-    
-    # ----------------------------------------------------------------------- # 
+
+    # ----------------------------------------------------------------------- #
     # initialize the server information
-    # ----------------------------------------------------------------------- # 
+    # ----------------------------------------------------------------------- #
     identity = ModbusDeviceIdentification()
     identity.VendorName = 'pymodbus'
     identity.ProductCode = 'PM'
@@ -65,6 +67,7 @@ def run_updating_server():
     x.start()
 
     StartTcpServer(context, identity=identity, address=("localhost", 5020))
+
 
 if __name__ == "__main__":
     run_updating_server()

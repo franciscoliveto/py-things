@@ -7,6 +7,7 @@ from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusServerContext, ModbusSlaveContext
 from pymodbus.device import ModbusDeviceIdentification
 
+
 def run_server():
     block = ModbusSequentialDataBlock(100, [255]*5)
     store = ModbusSlaveContext(di=block, co=block, hr=block, ir=block)
@@ -14,7 +15,7 @@ def run_server():
 
     """
     Initialize the server information
-    """ 
+    """
     identity = ModbusDeviceIdentification()
     identity.VendorName = 'Pymodbus'
     identity.ProductCode = 'PM'
@@ -24,6 +25,7 @@ def run_server():
     identity.MajorMinorRevision = '2.2.0'
 
     StartTcpServer(context, identity=identity, address=('0.0.0.0', 5020))
+
 
 if __name__ == "__main__":
     run_server()
