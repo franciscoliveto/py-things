@@ -13,7 +13,11 @@ socket.bind("tcp://*:5555")
 
 while True:
     #  Wait for next request from client
-    message = socket.recv()
+    try:
+        message = socket.recv_json()
+    except ValueError as e:
+        print(e)
+        continue
     print("Received request: %s" % message)
 
     #  Do some 'work'
