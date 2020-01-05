@@ -1,2 +1,4 @@
 pyzmq
 pyserial
+numpy
+matplotlib
