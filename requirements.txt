@@ -2,3 +2,4 @@ pyzmq
 pyserial
 numpy
 matplotlib
+flask
